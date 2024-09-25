@@ -2,6 +2,7 @@ const Services = require('../models/servicesModel');
 const baseResponse = require('../utils/response');
 
 const servicesController = {
+  // Get all services
   async getAllServices(req, res) {
     try {
       const services = await Services.getAll();
@@ -10,10 +11,15 @@ const servicesController = {
         .json(baseResponse(200, services, 'Services fetched successfully'));
     } catch (error) {
       console.error('Get All Services Error:', error);
-      res.status(500).json(baseResponse(500, null, 'Error fetching services'));
+      res
+        .status(500)
+        .json(
+          baseResponse(500, null, error.message || 'Error fetching services'),
+        );
     }
   },
 
+  // Get service by ID
   async getServiceById(req, res) {
     const { id } = req.params;
     try {
@@ -28,10 +34,15 @@ const servicesController = {
         .json(baseResponse(200, service, 'Service fetched successfully'));
     } catch (error) {
       console.error('Get Service By ID Error:', error);
-      res.status(500).json(baseResponse(500, null, 'Error fetching service'));
+      res
+        .status(500)
+        .json(
+          baseResponse(500, null, error.message || 'Error fetching service'),
+        );
     }
   },
 
+  // Create a new service
   async createService(req, res) {
     const { name, quota_id } = req.body;
     if (!name || !quota_id) {
@@ -46,10 +57,15 @@ const servicesController = {
         .json(baseResponse(201, newService, 'Service created successfully'));
     } catch (error) {
       console.error('Create Service Error:', error);
-      res.status(500).json(baseResponse(500, null, 'Error creating service'));
+      res
+        .status(500)
+        .json(
+          baseResponse(500, null, error.message || 'Error creating service'),
+        );
     }
   },
 
+  // Update a service by ID
   async updateService(req, res) {
     const { id } = req.params;
     const { name, quota_id } = req.body;
@@ -67,10 +83,15 @@ const servicesController = {
         );
     } catch (error) {
       console.error('Update Service Error:', error);
-      res.status(500).json(baseResponse(500, null, 'Error updating service'));
+      res
+        .status(500)
+        .json(
+          baseResponse(500, null, error.message || 'Error updating service'),
+        );
     }
   },
 
+  // Delete a service by ID
   async deleteService(req, res) {
     const { id } = req.params;
     try {
@@ -85,7 +106,11 @@ const servicesController = {
         .json(baseResponse(200, null, 'Service deleted successfully'));
     } catch (error) {
       console.error('Delete Service Error:', error);
-      res.status(500).json(baseResponse(500, null, 'Error deleting service'));
+      res
+        .status(500)
+        .json(
+          baseResponse(500, null, error.message || 'Error deleting service'),
+        );
     }
   },
 };

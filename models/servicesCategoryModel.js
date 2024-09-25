@@ -1,8 +1,21 @@
-// src/models/ServicesCategoryModel.js
 const pool = require('../config/db');
 
 class ServicesCategoryModel {
-  // Get all service categories with related service name
+  static async isCategoryNameExists(name, excludeId = null) {
+    try {
+      let query = `SELECT COUNT(*) FROM services_category WHERE name = $1`;
+      const values = [name];
+      if (excludeId) {
+        query += ` AND id != $2`;
+        values.push(excludeId);
+      }
+      const result = await pool.query(query, values);
+      return result.rows[0].count > 0;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async getAll() {
     try {
       const query = `
@@ -13,11 +26,13 @@ class ServicesCategoryModel {
           sc.load_amount, 
           sc.price, 
           sc.estimated_time, 
+          sc.service_id,
           s.name AS service_name 
         FROM 
           services_category sc
         JOIN 
           services s ON sc.service_id = s.id
+        ORDER BY sc.id ASC
       `;
       const result = await pool.query(query);
       return result.rows;
@@ -26,7 +41,6 @@ class ServicesCategoryModel {
     }
   }
 
-  // Find service category by ID
   static async findById(id) {
     try {
       const query = `
@@ -37,6 +51,7 @@ class ServicesCategoryModel {
           sc.load_amount, 
           sc.price, 
           sc.estimated_time, 
+          sc.service_id,
           s.name AS service_name 
         FROM 
           services_category sc
@@ -44,6 +59,7 @@ class ServicesCategoryModel {
           services s ON sc.service_id = s.id
         WHERE 
           sc.id = $1
+        ORDER BY sc.id ASC
       `;
       const result = await pool.query(query, [id]);
       return result.rows[0];
@@ -52,7 +68,6 @@ class ServicesCategoryModel {
     }
   }
 
-  // Create a new service category
   static async create({
     name,
     service_id,
@@ -62,6 +77,11 @@ class ServicesCategoryModel {
     estimated_time,
   }) {
     try {
+      const nameExists = await this.isCategoryNameExists(name);
+      if (nameExists) {
+        throw new Error('Category name already exists');
+      }
+
       const query = `
         INSERT INTO services_category 
           (name, service_id, minimum_load, load_amount, price, estimated_time) 
@@ -77,13 +97,14 @@ class ServicesCategoryModel {
         price,
         estimated_time,
       ]);
-      return result.rows[0];
+
+      const createdId = result.rows[0].id;
+      return await this.findById(createdId);
     } catch (error) {
       throw error;
     }
   }
 
-  // Update an existing service category
   static async update(
     id,
     { name, service_id, minimum_load, load_amount, price, estimated_time },
@@ -111,13 +132,13 @@ class ServicesCategoryModel {
         estimated_time,
         id,
       ]);
-      return result.rows[0];
+
+      return await this.findById(result.rows[0].id);
     } catch (error) {
       throw error;
     }
   }
 
-  // Delete a service category
   static async delete(id) {
     try {
       const query = 'DELETE FROM services_category WHERE id = $1 RETURNING *';

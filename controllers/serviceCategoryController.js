@@ -2,6 +2,7 @@ const ServicesCategory = require('../models/ServicesCategoryModel');
 const baseResponse = require('../utils/response');
 
 const servicesCategoryController = {
+  // Get all service categories
   async getAllServicesCategories(req, res) {
     try {
       const categories = await ServicesCategory.getAll();
@@ -18,10 +19,17 @@ const servicesCategoryController = {
       console.error('Get All Services Categories Error:', error);
       res
         .status(500)
-        .json(baseResponse(500, null, 'Error fetching services categories'));
+        .json(
+          baseResponse(
+            500,
+            null,
+            error.message || 'Error fetching services categories',
+          ),
+        );
     }
   },
 
+  // Get a service category by ID
   async getServiceCategoryById(req, res) {
     const { id } = req.params;
     try {
@@ -40,10 +48,17 @@ const servicesCategoryController = {
       console.error('Get Service Category By ID Error:', error);
       res
         .status(500)
-        .json(baseResponse(500, null, 'Error fetching service category'));
+        .json(
+          baseResponse(
+            500,
+            null,
+            error.message || 'Error fetching service category',
+          ),
+        );
     }
   },
 
+  // Create a new service category
   async createServiceCategory(req, res) {
     const {
       name,
@@ -80,10 +95,17 @@ const servicesCategoryController = {
       console.error('Create Service Category Error:', error);
       res
         .status(500)
-        .json(baseResponse(500, null, 'Error creating service category'));
+        .json(
+          baseResponse(
+            500,
+            null,
+            error.message || 'Error creating service category',
+          ),
+        );
     }
   },
 
+  // Update a service category by ID
   async updateServiceCategory(req, res) {
     const { id } = req.params;
     const {
@@ -121,10 +143,17 @@ const servicesCategoryController = {
       console.error('Update Service Category Error:', error);
       res
         .status(500)
-        .json(baseResponse(500, null, 'Error updating service category'));
+        .json(
+          baseResponse(
+            500,
+            null,
+            error.message || 'Error updating service category',
+          ),
+        );
     }
   },
 
+  // Delete a service category by ID
   async deleteServiceCategory(req, res) {
     const { id } = req.params;
     try {
@@ -141,7 +170,13 @@ const servicesCategoryController = {
       console.error('Delete Service Category Error:', error);
       res
         .status(500)
-        .json(baseResponse(500, null, 'Error deleting service category'));
+        .json(
+          baseResponse(
+            500,
+            null,
+            error.message || 'Error deleting service category',
+          ),
+        );
     }
   },
 };

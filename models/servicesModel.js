@@ -1,11 +1,10 @@
-// src/models/ServicesModel.js
 const pool = require('../config/db');
 
 class ServicesModel {
-  // Get all services
+  // Get all services, ordered by ID
   static async getAll() {
     try {
-      const query = 'SELECT * FROM services';
+      const query = 'SELECT * FROM services ORDER BY id ASC';
       const result = await pool.query(query);
       return result.rows;
     } catch (error) {
@@ -24,9 +23,30 @@ class ServicesModel {
     }
   }
 
-  // Create a new service
+  // Check if a service name already exists, excluding a specific ID
+  static async findByName(name, excludeId = null) {
+    try {
+      let query = 'SELECT * FROM services WHERE name = $1';
+      const values = [name];
+      if (excludeId) {
+        query += ' AND id != $2';
+        values.push(excludeId);
+      }
+      const result = await pool.query(query, values);
+      return result.rows[0];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Create a new service with unique name validation
   static async create({ name, quota_id }) {
     try {
+      const existingService = await this.findByName(name);
+      if (existingService) {
+        throw new Error(`Service with name "${name}" already exists`);
+      }
+
       const query = `
         INSERT INTO services (name, quota_id) 
         VALUES ($1, $2) 
@@ -39,7 +59,7 @@ class ServicesModel {
     }
   }
 
-  // Update an existing service
+  // Update an existing service with unique name validation
   static async update(id, { name, quota_id }) {
     try {
       const query = `
