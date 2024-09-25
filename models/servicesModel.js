@@ -82,6 +82,10 @@ class ServicesModel {
       const result = await pool.query(query, [id]);
       return result.rows[0];
     } catch (error) {
+      if (error.code === '23503') {
+        // Foreign key violation error code in PostgreSQL
+        throw new Error('Terdapat service category yang menggunakan data ini');
+      }
       throw error;
     }
   }
