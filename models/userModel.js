@@ -129,7 +129,10 @@ const User = {
 
     const query = `
       UPDATE users
-      SET password = $1, updated_at = NOW()
+      SET password = $1, 
+          reset_token = NULL, 
+          reset_token_expiry = NULL, 
+          updated_at = NOW()
       WHERE id = $2
       RETURNING id, fullname, email, username, role, created_at, updated_at
     `;

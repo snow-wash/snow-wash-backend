@@ -129,7 +129,7 @@ const authController = {
 
       const mailOptions = {
         to: user.email,
-        from: `CherryBlossom 👻 <gcyber21@gmail.com>`,
+        from: `Snow Wash 👻 <gcyber21@gmail.com>`,
         subject: 'Password Reset',
         text: `Klik link berikut untuk reset password: ${resetLink}`,
       };
@@ -141,7 +141,7 @@ const authController = {
         .json(baseResponse(200, null, 'Email reset password telah dikirim'));
     } catch (error) {
       console.error('Forgot Password Error:', error);
-      res.status(500).json(baseResponse(500, null, error));
+      res.status(500).json(baseResponse(500, null, error.message));
     }
   },
 
@@ -164,8 +164,9 @@ const authController = {
           );
       }
 
-      const hashedPassword = Buffer.from(newPassword).toString('base64');
-      await User.updatePassword(user.id, hashedPassword);
+      // const hashedPassword = Buffer.from(newPassword).toString('base64');
+      // console.log(hashedPassword);
+      await User.updatePassword(user.id, newPassword);
 
       res
         .status(200)

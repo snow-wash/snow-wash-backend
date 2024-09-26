@@ -2,10 +2,10 @@ const { Pool } = require('pg');
 
 // Konfigurasi koneksi database PostgreSQL
 const pool = new Pool({
-  user: 'mac', // Username PostgreSQL
+  user: 'postgres', // Username PostgreSQL
   host: 'localhost', // Host database
-  database: 'snowwash-db', // Nama database
-  password: 'postgres', // Password PostgreSQL
+  database: 'snow-wash', // Nama database
+  password: 'admin', // Password PostgreSQL
   port: 5432, // Port PostgreSQL default
 });
 

@@ -27,11 +27,16 @@ class ServicesCategoryModel {
           sc.price, 
           sc.estimated_time, 
           sc.service_id,
-          s.name AS service_name 
+          s.name AS service_name,
+          q.id AS quota_id,
+          q.name AS quota_name,
+          q.quota_limit 
         FROM 
           services_category sc
         JOIN 
           services s ON sc.service_id = s.id
+        LEFT JOIN 
+          quota q ON s.quota_id = q.id
         ORDER BY sc.id ASC
       `;
       const result = await pool.query(query);
@@ -52,11 +57,16 @@ class ServicesCategoryModel {
           sc.price, 
           sc.estimated_time, 
           sc.service_id,
-          s.name AS service_name 
+          s.name AS service_name,
+          q.id AS quota_id,
+          q.name AS quota_name,
+          q.quota_limit 
         FROM 
           services_category sc
         JOIN 
           services s ON sc.service_id = s.id
+        LEFT JOIN 
+          quota q ON s.quota_id = q.id
         WHERE 
           sc.id = $1
         ORDER BY sc.id ASC
