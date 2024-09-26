@@ -14,7 +14,13 @@ const transactionController = {
       console.error(error);
       res
         .status(500)
-        .json(baseResponse(500, null, 'Error fetching transactions'));
+        .json(
+          baseResponse(
+            500,
+            null,
+            `Error fetching transactions: ${error.message}`,
+          ),
+        );
     }
   },
 
@@ -35,7 +41,13 @@ const transactionController = {
       console.error(error);
       res
         .status(500)
-        .json(baseResponse(500, null, 'Error fetching transaction'));
+        .json(
+          baseResponse(
+            500,
+            null,
+            `Error fetching transaction: ${error.message}`,
+          ),
+        );
     }
   },
 
@@ -51,7 +63,13 @@ const transactionController = {
       console.error(error);
       res
         .status(500)
-        .json(baseResponse(500, null, 'Error creating transaction'));
+        .json(
+          baseResponse(
+            500,
+            null,
+            `Error creating transaction: ${error.message}`,
+          ),
+        );
     }
   },
 
@@ -75,7 +93,13 @@ const transactionController = {
       console.error(error);
       res
         .status(500)
-        .json(baseResponse(500, null, 'Error updating transaction'));
+        .json(
+          baseResponse(
+            500,
+            null,
+            `Error updating transaction: ${error.message}`,
+          ),
+        );
     }
   },
 
@@ -100,7 +124,13 @@ const transactionController = {
       console.error(error);
       res
         .status(500)
-        .json(baseResponse(500, null, 'Error deleting transaction'));
+        .json(
+          baseResponse(
+            500,
+            null,
+            `Error deleting transaction: ${error.message}`,
+          ),
+        );
     }
   },
 };

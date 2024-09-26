@@ -3,14 +3,22 @@ const pool = require('../config/db');
 class Transaction {
   static async getAllTransactions() {
     const query = `SELECT * FROM transaction ORDER BY id ASC`;
-    const { rows } = await pool.query(query);
-    return rows;
+    try {
+      const { rows } = await pool.query(query);
+      return rows;
+    } catch (error) {
+      throw error;
+    }
   }
 
   static async getTransactionById(id) {
     const query = `SELECT * FROM transaction WHERE id = $1`;
-    const { rows } = await pool.query(query, [id]);
-    return rows[0];
+    try {
+      const { rows } = await pool.query(query, [id]);
+      return rows[0];
+    } catch (error) {
+      throw error;
+    }
   }
 
   static async createTransaction(transactionDetails) {
@@ -33,20 +41,24 @@ class Transaction {
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW())
       RETURNING *;
     `;
-    const { rows } = await pool.query(query, [
-      customer_name,
-      transaction_date,
-      service_id,
-      service_category_id,
-      total_load_amount,
-      total_used_quota,
-      total_price,
-      operation_start,
-      operation_end,
-      estimate_time,
-      status,
-    ]);
-    return rows[0];
+    try {
+      const { rows } = await pool.query(query, [
+        customer_name,
+        transaction_date,
+        service_id,
+        service_category_id,
+        total_load_amount,
+        total_used_quota,
+        total_price,
+        operation_start,
+        operation_end,
+        estimate_time,
+        status,
+      ]);
+      return rows[0];
+    } catch (error) {
+      throw error;
+    }
   }
 
   static async updateTransaction(id, transactionDetails) {
@@ -70,27 +82,35 @@ class Transaction {
       WHERE id = $12
       RETURNING *;
     `;
-    const { rows } = await pool.query(query, [
-      customer_name,
-      transaction_date,
-      service_id,
-      service_category_id,
-      total_load_amount,
-      total_used_quota,
-      total_price,
-      operation_start,
-      operation_end,
-      estimate_time,
-      status,
-      id,
-    ]);
-    return rows[0];
+    try {
+      const { rows } = await pool.query(query, [
+        customer_name,
+        transaction_date,
+        service_id,
+        service_category_id,
+        total_load_amount,
+        total_used_quota,
+        total_price,
+        operation_start,
+        operation_end,
+        estimate_time,
+        status,
+        id,
+      ]);
+      return rows[0];
+    } catch (error) {
+      throw error;
+    }
   }
 
   static async deleteTransaction(id) {
     const query = `DELETE FROM transaction WHERE id = $1 RETURNING *;`;
-    const { rows } = await pool.query(query, [id]);
-    return rows[0];
+    try {
+      const { rows } = await pool.query(query, [id]);
+      return rows[0];
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
